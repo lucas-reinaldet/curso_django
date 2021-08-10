@@ -97,5 +97,134 @@ from .models import Post
 admin.site.register(Post)
 _________________________________________
 
+Tranforma seu projeto em um repositorio:
+
+git init
+
+Verifica o Status dos seus arquivos
+
+git status
+
+Para ignorart arquivos ou pastas, é necessário criar um arquivo chamado:
+
+.gitignore
+
+E dentro deste arquivo, escrever o nome da pasta que não será exportada.
+
+Para fazer um commit do código basta executar:
+
+git add .
+
+Depois de executado este commando, deverá ser executado:
+
+git commit -m "Comentário sobre o upload dos dados"
+
+E para finalizar, basta executar
+
+git push origin
+
+Para verificar os branchs do git (como se fosse um usuario)
+
+git branch -v
+
+_________________________________________
+
+
+O comando "Include" fornece a capacidade de inserir as URLS de outros APP's
+
+Exemplo: 
+
+from django.contrib import admin
+from django.urls import path
+from django.urls.conf import include
+from .views import hello_world
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('hello/', hello_world),
+    path('blog/', include('website.urls')),
+]
+
+E o arquivo também pode ser criado dentro dessas APPS caso não exista.
+
+Exemplo: 
+
+from django.urls import path
+from .views import hello_blog
+
+urlpatterns = [
+    path('', hello_blog),
+
+]
+
+E dentro da Views chamada, basta criar uma função que te retorna as informações desejadas para ser apresentado.
+
+É importante mencionar, que é possivel também retornar páginas HTML, criadas dentro do proprio APP.
+
+exemplo:
+
+from django.shortcuts import render
+from django.http import HttpResponse
+# Create your views here.
+
+def hello_blog(request):
+
+    return render(request, 'index.html')
+    
+Observação:
+
+A pasta Templates [A pasta é criada pelo usuário] (onde se localiza o arquivo html) é automaticamente referenciada dentro do projeto, entretanto é possivel referenciar outros arquivos de outras pastas, sendo necessário acrescentar o caminho da pasta em settings.
+
+Exemplo:
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['templates_geral'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+Onde a pasta está localizada fora da APP.
+
+Exemplo:
+
+from django.shortcuts import render
+from django.http import HttpResponse
+# Create your views here.
+
+def hello_blog(request):
+
+    return render(request, 'index_geral.html')
+    
+ _________________________________________
+  
+ Injetar conteudo dentro do Template
+ 
+ É passado como response do meu render.
+ 
+ Exemplo:
+ 
+ from django.shortcuts import render
+from django.http import HttpResponse
+# Create your views here.
+
+def hello_blog(request):
+
+    data = {'name': 'Curso de Django 3'}
+
+    return render(request, 'index.html', data)
+    
+Onde, é possivel resgatar o conteudo colocando o nome da key do dicionario entre duas chaves:
+
+{{ name }}
 
 
