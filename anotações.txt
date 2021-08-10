@@ -6,33 +6,34 @@ WSGI -> Serve para deproid e pertence as versoes anteriores
 
 É indicado que a nomenclatura do model seja escrita em inglês
 
-----------
+O Django é composto por APP's
 
+_________________________________________
 
 python manage.py migrate -> criar tabela e popular essas tabelas padroes do python
 
 python manage.py createsuperuser -> criar um super usuario
 
-python manage.py runserver -> acessar a utl -> acrescentar /admin -> acessar pasta de administração do django
+python manage.py runserver -> acessar a URL -> acrescentar /admin -> acessar pasta de administração do django
 
 Em URls.py será o responsavel por ligar a WEB com a View do sistema
 
 python manage.py startapp nome_app  -> criou uma app
 
-Ao criar uma pp deve-se ir em settings.py e acrescentar o nome a variavel installed_apps.
+Ao criar uma app deve-se ir em settings.py e acrescentar o nome à variavel installed_apps.
 
-_________________________
+_________________________________________
 
 em models.py do app criado, para criar um modelo da base de dados, é utilizado uma classe que herda de models.Model (from django.db import models)
 
-exemplo:
+Exemplo de uma Classe modelo Criada:
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
     sub_title = models.CharField(max_length=200)
     content = models.TextField() #tamanho em aberto
     
-________________
+_________________________________________
 
 Apos criado o model, ao executar o comando
 
@@ -72,15 +73,29 @@ class Migration(migrations.Migration):
         ),
     ]
 
-___________________________-
+_________________________________________
 
 O comando a seguir, serve para criar a tabela na base de dados 
 
 python manage.py migrate
 
-________________________________
+_________________________________________
 
-Para interagir com a tabela do banco de dados, é necessário documentar no arquivo admin, para possibilitar que o mesmo seja apresentado no admin do django
+Para interagir com a tabela do banco de dados, é necessário documentar no arquivo admin, para possibilitar que o mesmo seja apresentado no admin do django.
+
+http://127.0.0.1:8000/admin/
 
 No arquivo admin.py do app criado.
+
+devese-se realizar a importação do arquivo Model, e registrar o mesmo.
+
+Exemplo de código:
+
+from django.contrib import admin
+from .models import Post
+
+admin.site.register(Post)
+_________________________________________
+
+
 
