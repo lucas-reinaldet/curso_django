@@ -407,4 +407,63 @@ class Post(models.Model):
 
     full_name.admin_order_field = 'title'
   
+__________________________________________-
+
+Para definir o que é apresentado na lista de objetos do admin, basta criar uma função na classe do objeto a ser criado admin, e definir atraves do campo o que será apresentado.
+
+Exemplo:
+
+from django.contrib import admin
+from .models import Post
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'sub_title', 'full_name', 'categories']
+    search_fields = ['title', 'sub_title']
+    # fields = ['title', 'sub_title']
+
+    def get_queryset(self, request):
+        return Post.objects.filter(approved=True)
+
+admin.site.register(Post, PostAdmin)
+_____________________________________________
+
+Para apresentar o nome da categoria ao invés da sigla, basta utilizar:
+
+get_categories_display
+
+Sendo categories o nome da variavel no model post 
+_____________________________________________
+
+Configurando arquivos estaticos
+
+Por convenção, todas as APP's que possuirem este tipo de pasta, deverá ser chamada de "static" caso contrario, deverá ser mapeada em STATIC_URL no arquivo settings.py
+
+Em static, será localizado arquivos que não são dinamicos (avá) e conterá CSS, pictures, etc.
+
+No arquivo html, onde será usado algum desses arquivos, é necessário colocar no começo doarquivo (antes da tag doctype, o seguinte comando:
+
+{% load static %}
+
+E em <head>, o mesmo deve fazer referência ao conteudo da pasta:
+
+Exemplo:
+
+<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+Exemplo de Código:
+
+<div class="row">
+
+    {% for post in posts%}
+
+        <article class="col-6 col-12-xsmall work-item">
+              <a href="{% static 'images/fulls/01.jpg' %}"  class="image fit thumb"><img src="{% static 'images/thumbs/01.jpg' %}" alt="" /></a>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.sub_title }}</p>
+        </article>
+
+    {% endfor %}
+						
+</div>
+
 

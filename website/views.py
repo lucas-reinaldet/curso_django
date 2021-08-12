@@ -5,7 +5,7 @@ from .models import Post
 def hello_blog(request):
     lista = ['Django', 'Python', 'Git', 'HTML', 'Banco de Dados', 'Linux', 'Nginx', 'Uwsgi']
 
-    lista_post =  Post.objects.all()
+    lista_post =  Post.objects.filter(approved=True)
 
     data = {'name': 'Curso de Django 3', 
     'lista_tecnologias': lista,
