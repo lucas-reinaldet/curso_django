@@ -12,7 +12,7 @@ class Post(models.Model):
     categories = models.CharField(max_length=2,
                         choices=Categorias.choices,
                         default=Categorias.GR)
-
+    approved = models.BooleanField(default=True)
 
     def __str__(self):
 

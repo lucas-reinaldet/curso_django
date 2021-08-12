@@ -376,6 +376,35 @@ class Post(models.Model):
     
   ________________________________-
   
-  Para criar uma lista de 
+  Para criar uma lista de categorias, onde determinada sigla signifique um valor (comose criasse uma tabela para armazenar os tipos, siglas e ai associar a uma outra tabela). No Django, é possivel criar uma classe que herda da classe models.TextChoices e ali, em formato de variaveis, definirir as siglas e seus respectivos valores.
+  
+Desta forma, é cadastro no banco de dados apenas as siglas por exemplo, e quando apresentado ao usuário na tela de admin para o cadastro, o significado da sigla é apresentado.
+
+Exemplo do código:
+
+from django.db import models
+
+class Categorias(models.TextChoices):
+    TECH = 'TC', 'Tecnologia'
+    CR = 'CR', 'Curiosidades'
+    GR = 'GR', 'Geral'
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    sub_title = models.CharField(max_length=200)
+    content = models.TextField() #tamanho em aberto
+    categories = models.CharField(max_length=2,
+                        choices=Categorias.choices,
+                        default=Categorias.GR)
+    approved = models.BooleanField(default=True)
+
+    def __str__(self):
+
+        return self.title
+
+    def full_name(self):
+        return self.title + ' ' + self.sub_title
+
+    full_name.admin_order_field = 'title'
   
 
