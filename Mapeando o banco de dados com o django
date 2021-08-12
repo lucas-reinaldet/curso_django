@@ -1,0 +1,36 @@
+Mapeando o banco de dados com o django
+
+Depois de instalado o django (arquivo 01)
+
+Em nome_projeto, acesse o arquivo "settings.py"
+
+Procure no arquivo a variavel "DATABASES".
+
+Defina para essa variavel, os dados de acesso a base de dados que será importada.
+
+Exemplo:
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'base_dados',
+        'USER': 'usuario_postgres',
+        'PASSWORD': 'senha_postgres',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
+}
+
+Apos configurado a variavel em settings.py, acesse o terminal e vá para a pasta "configurações_django" atraves do comando:
+
+cd nome_projeto/
+
+Ao estar no mesmo nivel do arquivo "manage.py" (é possivel verificar atraves do comando ls), será executado o seguinte comando:
+
+python manage.py inspectdb > model/models.py
+
+Caso Spyder
+
+!python manage.py inspectdb > model/models.py
+
+Observação: model é a pasta criada para o armazenamento dos modelos do banco de dados e o model.py é o arquivo dos modelos

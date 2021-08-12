@@ -1,0 +1,11 @@
+Comandos
+
+# Adicionar Campos ou Tabelas ao banco de dados
+
+python manage.py makemigrations #identifica novas modificações nos models ou novos models, cria o arquivo no package migrations
+
+python manage.py migrate 
+
+
+
+

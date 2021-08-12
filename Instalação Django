@@ -1,0 +1,40 @@
+Utilização Django
+
+instalar Django 
+
+Passo 01
+
+(caso seja pycharm) -----
+
+file > settings > project: [nome projeto] > install (simbolo +) > pesquisare por Django > Install Package
+
+(Anaconda/Spyde)
+
+Environments -> nome_projeto -> combox ao lado de Channels -> not installed -> Search Packages -> Django -> selecionar -> instalar
+
+Passo 02
+
+Depois de instalado, você deverá criar os arquivos de configurações do django.
+deve-se acessar o terminal do projeto e executar o seguinte comando:
+
+django-admin startproject nome_projeto
+
+Caso esteja na IDE Spyder
+
+!django-admin startproject nome_projeto
+
+Observação: nome_projeto, será o nome da pasta onde será armazenado todas as informações e configurações do framework
+podendo ser substituido por qualquer outra nomenclatura
+
+Passo 03
+
+Verificar se o projeto está okay.
+
+cd nome_projeto
+
+python manage.py runserver
+
+Quando executado o comando anterior, será gerado uma URL, quando acessada deverá ser apresentado informando que a instalação
+teve sucesso.
+
+

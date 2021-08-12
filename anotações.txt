@@ -374,5 +374,8 @@ class Post(models.Model):
 
     full_name.admin_order_field = 'title'
     
-   
+  ________________________________-
+  
+  Para criar uma lista de 
+  
 
