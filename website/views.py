@@ -1,9 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-# Create your views here.
+from .models import Post
 
 def hello_blog(request):
     lista = ['Django', 'Python', 'Git', 'HTML', 'Banco de Dados', 'Linux', 'Nginx', 'Uwsgi']
-    data = {'name': 'Curso de Django 3', 'lista_tecnologias': lista}
+
+    lista_post =  Post.objects.all()
+
+    data = {'name': 'Curso de Django 3', 
+    'lista_tecnologias': lista,
+    'posts': lista_post    
+    }
 
     return render(request, 'index.html', data)

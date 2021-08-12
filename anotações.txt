@@ -227,4 +227,152 @@ Onde, é possivel resgatar o conteudo colocando o nome da key do dicionario entr
 
 {{ name }}
 
+Exemplo de uma lista de nomes:
+
+Arquivo Views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+# Create your views here.
+
+def hello_blog(request):
+    lista = ['Django', 'Python', 'Git', 'HTML', 'Banco de Dados', 'Linux', 'Nginx', 'Uwsgi']
+    data = {'name': 'Curso de Django 3', 'lista_tecnologias': lista}
+
+    return render(request, 'index.html', data)
+    
+
+Arquivos. index.html
+
+<h1> BLOG </h1>
+
+{{ name }}
+
+<ul>
+{% for item in lista_tecnologias %}
+
+    {% if item == 'Django' %}
+        
+        <li><b> {{ item }} </b></li> 
+
+    {% else %}
+
+        <li> {{ item }} </li> 
+
+    {% endif %}
+
+{% endfor %}
+</ul>
+
+__________________________
+
+Consultar a base de dados
+
+from .models import Post
+
+def funcao_x():
+
+	lista = Post.objects.all()
+	
+_________________________	
+
+# mais informações https://docs.djangoproject.com/en/3.2/ref/contrib/admin/
+
+Personalizar como é mostrado os objetos no modulo admin
+
+Criar uma classe que herda de admin.ModelAdmin
+
+E cria uma lista dos campos e passa a classe como parametro para o admin.site.register
+
+Exemplo:
+
+from django.contrib import admin
+from .models import Post
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'sub_title']
+
+admin.site.register(Post, PostAdmin)
+
+
+Ou até mesmo é possivel ativar o campo de busca, acrescentando apenas a classe mencionada anteriormente o seguinte comando:
+
+search_fields = ['title', 'sub_title']
+
+é possivel também determinar os campos que poderão ser editados e criados, sendo apresentado apenas os campos listados em fields.
+
+fields = ['title', 'sub_title']
+
+_________________________________-
+
+Para alterar a maneira que os objetos são representados na edição de dados já cadastrados, basta criar uma função __str__ na classe do objeto, padraonizando assim a maneira que o dado será apresentado.
+
+Exemplo:
+
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    sub_title = models.CharField(max_length=200)
+    content = models.TextField() #tamanho em aberto
+
+    def __str__(self):
+
+        return self.title
+
+É possivel também, criar novos "campos" de apresentação na listagem de objetos.
+
+Basta criar um metodo (na classe do objeto) retornando a informação desejada, e ai em list_display, setar esse metodo.
+
+Exemplo:
+
+Arquivo models.py
+
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    sub_title = models.CharField(max_length=200)
+    content = models.TextField() #tamanho em aberto
+
+    def __str__(self):
+
+        return self.title
+
+    def full_name(self):
+        return self.title + ' ' + self.sub_title
+
+Arquivo admin.py
+
+from django.contrib import admin
+from .models import Post
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'sub_title', 'full_name']
+    search_fields = ['title', 'sub_title']
+    fields = ['title', 'sub_title']
+
+admin.site.register(Post, PostAdmin)
+
+Inicialmente, o mesmo não poderá ser ordenado como os outros campos, entretanto, basta colocar o nome do metodo (na classe que se encontra em model.py) seguido de admin_order_fiel e setar qual será o campo usado para ordenar essa coluna.
+
+Exemplo:
+
+from django.db import models
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    sub_title = models.CharField(max_length=200)
+    content = models.TextField() #tamanho em aberto
+
+    def __str__(self):
+
+        return self.title
+
+    def full_name(self):
+        return self.title + ' ' + self.sub_title
+
+    full_name.admin_order_field = 'title'
+    
+   
 
