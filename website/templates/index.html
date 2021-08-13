@@ -52,6 +52,9 @@
                                     <h3>{{ post.title }}</h3>
                                     <p>{{ post.sub_title }}</p>
                                     <spam>{{ post.get_categories_display }}</spam>
+									<ul class="actions">
+										<li><a href="{% url 'post_detail' post.id %}"  class="button">Read More</a></li>
+									</ul>
                                 </article>
 
                             {% endfor %}

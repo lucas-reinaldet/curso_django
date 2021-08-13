@@ -466,4 +466,63 @@ Exemplo de Código:
 						
 </div>
 
+_________________________________
+
+criar uma url com informações de id ou dados para identificar de onde está vindo a mesma.
+
+No arquivo html que será usado como inicializador da mudança de página, no link de referencia ( href= ).
+
+Exemplo:
+
+{% for post in posts%}
+	<ul class="actions">
+		<li><a href="{% url 'post_detail' post.id %}"  class="button">Read More</a></li>
+	</ul>
+{% endfor %}
+
+Em views do app utilizado, será necessário criar uma função que terá como parametro o request, e a variavel que será passada por parametro.
+
+Exemplo:
+
+def post_detail(request, id):
+    post = Post.objects.get(id=id)
+    return render(request, 'post_detail.html', {'post': post})
+    
+Em urls.py do app, será necessário definir um novo path com o primeiro parametro definido como post (nome da variavel que é definido no arquivo html, e em os sinais de "<" e ">" identificar o tipo do conteudo e o nome da variavel.
+
+Exemplo:
+
+from django.urls import path
+from .views import hello_blog
+
+#importar a função criada
+from .views import post_detail
+
+urlpatterns = [
+    path('', hello_blog, name='home_blog'),
+    
+    #identificar os parametros e a função importada 
+    # definirir um name
+    path('post/<int:id>/', post_detail, name='post_detail'),
+]
+
+E no outro arquivo HTML, basta utilizar a variavel passada.
+
+<section id="one">
+	<header class="major">
+		<h2> {{ post.title}}</h2>
+      		<H4> {{ post.sub_title }}</H4>
+	</header>
+	<p>{{POST.content}}</p>
+	
+	<ul class="actions">
+		<li><a href="{% url 'home_blog' %}"  class="button">Return</a></li>
+	</ul>
+</section>
+	
+Para voltar para a página inicial, basta criar um botão com a seguinte refência:
+
+<a href="{% url 'home_blog' %}"  class="button">Return</a>
+____________________________________________-
+
 
