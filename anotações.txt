@@ -480,6 +480,9 @@ Exemplo:
 	</ul>
 {% endfor %}
 
+
+Vale resaltar, que é necessário atribuir um nome ao "path", sendo a forma de ser encontrado atrvés do arquivo HTML.
+
 Em views do app utilizado, será necessário criar uma função que terá como parametro o request, e a variavel que será passada por parametro.
 
 Exemplo:
@@ -488,7 +491,7 @@ def post_detail(request, id):
     post = Post.objects.get(id=id)
     return render(request, 'post_detail.html', {'post': post})
     
-Em urls.py do app, será necessário definir um novo path com o primeiro parametro definido como post (nome da variavel que é definido no arquivo html, e em os sinais de "<" e ">" identificar o tipo do conteudo e o nome da variavel.
+Em urls.py do app, será necessário definir um novo path com o primeiro parametro definido como "post" (nome da variavel que é definido no arquivo html, e em os sinais de "<" e ">" identificar o tipo do conteudo e o nome da variavel.
 
 Exemplo:
 
