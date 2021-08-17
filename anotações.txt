@@ -440,7 +440,7 @@ Por convenção, todas as APP's que possuirem este tipo de pasta, deverá ser ch
 
 Em static, será localizado arquivos que não são dinamicos (avá) e conterá CSS, pictures, etc.
 
-No arquivo html, onde será usado algum desses arquivos, é necessário colocar no começo doarquivo (antes da tag doctype, o seguinte comando:
+No arquivo html, onde será usado algum desses arquivos, é necessário colocar no começo do arquivo (antes da tag doctype, o seguinte comando:
 
 {% load static %}
 
@@ -527,5 +527,115 @@ Para voltar para a página inicial, basta criar um botão com a seguinte refênc
 
 <a href="{% url 'home_blog' %}"  class="button">Return</a>
 ____________________________________________-
+
+Quando se é referenciado uma pasta dentro de seu arquivo, é importante se atentar ao "path" da pasta ou arquivo, já que quando feito o upload para algum servidor, o mesmo pode mudar, fazendo assim com que ocorra erros de not found.
+
+uma maneira de prevenir este tipo de ocorrencia, é utilizar a biblioteca "os" do Python, onde utiliza a localização do mesmo e agregar a localização do arquivo desejado.
+
+Exemplo:
+
+from pathlib import Path
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+__________________________________________
+
+Arquivos de midia (manipular)
+
+Aprender a colocar imagem vinculada a determinado componente da página WEB.
+
+Em settings.py, será necessário alterar ou criar duas variaveis:
+
+MEDIA_ROOT = "caminho absoluto dos seus arquivos de midia"
+
+MEDIA_URL = "Caminho para chegar aos caminhos de midia"
+
+Exempĺo:
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
+No model, na classe desejada. Deve-se criar uma variavel do tipo "ImageField", onde já possui diversas funcionalidades inseridas.
+
+Exemplo:
+
+image = models.ImageField(upload_to='posts')
+
+sendo "upload_to" a subpasta dentro da pasta definida em "MEDIA_URL" onde será armazenado as imagens. No exemplo em questão a pasta será chamada "posts" e estará localizada em "media"
+
+É importante reforçar que sempre que ocorrer uma mudança em models, deve-se realizar o comando makemigrations
+
+python manage.py makemigration
+
+*********************
+
+Vale ressaltar que caso a mesma base de dados (model ou class) já possua registros, e o campo criado é obrigatório, tem-se duas alternativas.
+
+A primeira é continuar com o processo e atribuir valores zerados ou vazios esses registros.
+
+Ou editar o campo para permitir que receba valores nulos ou padrões.
+
+Exemplo:
+
+image = models.ImageField(upload_to='posts', null=True, blank=True)
+
+
+ou
+
+approved = models.BooleanField(default=True)
+
+***********************
+
+retornando que foi adicionado o field a classe post
+
+e em seguinda, deve-se executar o comando migrate
+
+python manage.py migrate
+
+onde espelhará o model (estrutura) na base de dados.
+
+Depois de executado todos os passos anteriores, basta acessar o admin do django para realizar o cadastro de um novo post com imagem. 
+
+Apos isso, no HTML, basta referenciar a variavel em uma tag 'img".
+
+Exemplo:
+
+<img src="{{ post.image.url }}">
+
+***********************
+
+"Serving static files during development"
+
+Observação: Inicialmente o servidor do Django, não apresenta imagem, sendo necessário realizar uma gambiarra do proprio framework.
+
+é necessário fazer a importação de settings e static dentro de urls.py (tem que ser na urls.py do projeto):
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+e em seguida, apos o colchete de fechamento da "urlpatterns" acrescentar o seguinte comando:
+
++ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+Exemplo:
+
+from django.contrib import admin
+from django.urls import path
+from django.urls.conf import include
+from .views import hello_world
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('hello/', hello_world),
+    path('blog/', include('website.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+*******************************
 
 

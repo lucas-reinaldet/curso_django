@@ -45,10 +45,22 @@
 						<h2>Recent Work</h2>
 						<div class="row">
 
-                            {% for post in posts%}
+                            {% for post in posts %}
+								
+								{% if post.image %}
+
+									<a href="{{ post.image.url }}"  class="image fit thumb">
+										<img src="{{ post.image.url }}" alt="" />
+									</a>
+								{% else %}
+									<a href="{% static 'images/thumbs/01.jpg' %}"  class="image fit thumb">
+										<img src="{% static 'images/thumbs/01.jpg' %}" alt="" />
+									</a>
+								{% endif %}
+							
 
                                 <article class="col-6 col-12-xsmall work-item">
-                                    <a href="{% static 'images/fulls/01.jpg' %}"  class="image fit thumb"><img src="{% static 'images/thumbs/01.jpg' %}" alt="" /></a>
+
                                     <h3>{{ post.title }}</h3>
                                     <p>{{ post.sub_title }}</p>
                                     <spam>{{ post.get_categories_display }}</spam>

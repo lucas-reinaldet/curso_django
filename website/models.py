@@ -13,6 +13,7 @@ class Post(models.Model):
                         choices=Categorias.choices,
                         default=Categorias.GR)
     approved = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='posts', null=True, blank=True)
 
     def __str__(self):
 
