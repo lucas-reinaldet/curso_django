@@ -583,7 +583,6 @@ Exemplo:
 
 image = models.ImageField(upload_to='posts', null=True, blank=True)
 
-
 ou
 
 approved = models.BooleanField(default=True)
@@ -637,5 +636,183 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 *******************************
+
+Depois de realizado as alterações anteriores, para apresentar o mesmo no arquivo HTML durante o desenvolvimento. Basta utilizar o campo da classe e utilizar o "url" da mesma.
+
+Exemplo:
+
+<img src="{{ post.image.url }}" alt="" />
+
+Um ponto importante para mencionar, é a verificação se o mesmo possui conteudo. Uma maneira de realizar essa verificação é utilizar o "django Language Template", que é uma linguagem propria do django, onde é possivel programar de forma simples a apresentação do conteudo no arquivo HTML.
+
+Essa linguagem já foi apresentada neste arquivo, porém não foi mencionada explicitamente que a mesma pertence ao django.
+
+Um exemplo do código realizado para a apresentação das imagens (quando possui):
+
+{% for post in posts %}
+
+	{% if post.image %}
+		<a href="{{ post.image.url }}"  class="image fit thumb">
+			<img src="{{ post.image.url }}" alt="" />
+5		</a>
+	{% else %}
+		<a href="{% static 'images/thumbs/01.jpg' %}"  class="image fit thumb">
+			<img src="{% static 'images/thumbs/01.jpg' %}" alt="" />
+		</a>
+	{% endif %}
+	
+	<article class="col-6 col-12-xsmall work-item">
+	
+		<h3>{{ post.title }}</h3>
+	
+		<p>{{ post.sub_title }}</p>
+	
+		<spam>{{ post.get_categories_display }}</spam>
+		
+		<ul class="actions">
+			<li><a href="{% url 'post_detail' post.id %}"  class="button">Read More</a></li>
+		</ul>
+		
+	</article>
+	
+{% endfor %}
+
+____________________________________________________________--
+
+Receber informações de página web
+
+Primeiro vamos criar um novo model para receber essas informações:
+
+Exemplo:
+
+class Contact(models.Model):
+
+	name = models.CharField(max_length=150)
+	email = models.EmailField()
+	message = models.TextField()
+
+Apos realizar alteração no model, deve-se realizar os comandos
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+Agora vamos criar uma rota, para indicar o caminho da web ao django.
+
+Primeiro devemos criar uma nova url em urls.py da APP;
+
+Exemplo:
+
+from django.urls import path
+from .views import save_form
+
+urlpatterns = [
+    path('save-form/', save_form, name='save_form'),
+] 
+
+No HTML, deve-se mencionar em action do formulário, a URL criada em urls.py
+
+Exemplo:
+
+<form method="contact_post" action="{% url 'save_form' %}">
+
+********
+
+Observação:
+
+Ao tentar submeter o formulário, o django irá disparar um warning solicitando a imprementação do CSRF como forma desegurança,pos o Django já possui proteção contra CSRF (Cross-site request forgery
+) que é um tipo de ataque hacker.
+
+Para ativar, basta colocar dentro de seu form o seguinte comando:
+
+{% csrf_token %}
+
+**********
+
+Observação:
+
+Ao criar um novo model, é importante mapea-lo no admin.py do app. Pois essa será a unica maneira que o mesmo seja apresentado na pagina de administração do django.
+
+Exemplo:
+
+from django.contrib import admin
+from .models import Contact
+
+class PostContact(admin.ModelAdmin):
+    list_display = ['name']
+
+admin.site.register(Contact, PostContact)
+
+**************
+
+Lembrando apenas que o admin está mapeado em urls.py do projeto.
+
+Exemplo:
+
+from django.contrib import admin
+from django.urls import path
+from django.urls.conf import include
+from .views import hello_world
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('hello/', hello_world),
+    path('blog/', include('website.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+********************
+
+Em views.py
+
+Deve-se criar o metodo que irá receber todas as informações do formulário.
+
+Como foi visto na etapa anterior, importamos de ".views" o "save_form", esse metodo receberá as informações do html e dará continuidade no processo de cadastro:
+
+Exemplo:
+
+def save_form(request):
+
+    return render(request, 'contact_success.html')
+    
+Observação: ao retornar 'contact_success.html', o django retornará para o browser o arquivo html.
+
+Quando submetido o formulário, chegará em seu método um dicionário de dados.
+
+Exempĺo:
+
+<QueryDict: {'csrfmiddlewaretoken': ['c0zjAPuB5DwwfAvKb5k7VUy21oGMLFLcLZSJaOOacIK9oewbSLQhLlAeRBjyCllk'], 'name': ['Nomr'], 'email': ['Email@email.com'], 'message': ['Mensagem sem limite de caracter']}>
+
+Tendo em vista esses dados, para adicionar os dados diretamente em um model e criar o mesmo na base de dados, basta se basear na seguinte estrutura:
+
+
+Contact.objects.create(
+	name = request.POST['name'],
+	email = request.POST['email'],
+	message = request.POST['message']
+)
+
+Tendo como resultado o seguinte método:
+
+def save_form(request):
+
+    Contact.objects.create(
+        name = request.POST['name'],
+        email = request.POST['email'],
+        message = request.POST['message']
+    )
+
+    return render(request, 'contact_success.html')
+
+***************
+
+Observação:
+
+quando é utilizado o request.POST, isso indica que os dados estão vindo via POST, não estando relacionado a nenhuma nomenclatura de formulário ou metodo.
+
+******************8
+
 
 
