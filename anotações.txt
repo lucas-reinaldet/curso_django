@@ -714,7 +714,7 @@ No HTML, deve-se mencionar em action do formulário, a URL criada em urls.py
 
 Exemplo:
 
-<form method="contact_post" action="{% url 'save_form' %}">
+<form method="post" action="{% url 'save_form' %}">
 
 ********
 
@@ -797,22 +797,37 @@ Contact.objects.create(
 Tendo como resultado o seguinte método:
 
 def save_form(request):
-
+    nome = request.POST['name']
     Contact.objects.create(
-        name = request.POST['name'],
+        name = nome,
         email = request.POST['email'],
         message = request.POST['message']
     )
 
-    return render(request, 'contact_success.html')
+    return render(request, 'contact_success.html', {'name_contact': nome})
+
 
 ***************
 
 Observação:
 
+contact_sucess.html é apenas um arquivo html simples para apresentar uma informação de sucesso.
+
 quando é utilizado o request.POST, isso indica que os dados estão vindo via POST, não estando relacionado a nenhuma nomenclatura de formulário ou metodo.
 
-******************8
+******************
+
+_______________________________
+
+Para que a URL do blog se torne a URL principal "http://127.0.0.1:8000" ao invés de "http://127.0.0.1:8000/blog/"; basta ir em urls.py do projeto e modificar a url:
+
+path('blog/', include('website.urls')),
+
+para
+
+path('', include('website.urls')),
+
+______________________________
 
 
 

@@ -20,11 +20,11 @@ def post_detail(request, id):
 
 
 def save_form(request):
-
+    nome = request.POST['name']
     Contact.objects.create(
-        name = request.POST['name'],
+        name = nome,
         email = request.POST['email'],
         message = request.POST['message']
     )
 
-    return render(request, 'contact_success.html')
+    return render(request, 'contact_success.html', {'name_contact': nome})
